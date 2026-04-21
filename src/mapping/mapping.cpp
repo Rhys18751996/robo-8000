@@ -1,6 +1,6 @@
 #include "mapping.h"
 
-#include <ArduinoJson.h>
+#include <ArduinoJson.h> //ArduinoJson by Benoit Blanchon
 #include <math.h>
 #include <string.h>
 

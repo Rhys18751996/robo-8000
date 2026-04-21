@@ -1,6 +1,6 @@
 #include "preferences_storage.h"
 
-#include <ArduinoJson.h>
+#include <ArduinoJson.h> //ArduinoJson by Benoit Blanchon
 #include <Preferences.h>
 
 #include "mapping_json.h"
