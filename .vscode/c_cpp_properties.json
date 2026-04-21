@@ -6,7 +6,6 @@
         "${workspaceFolder}/**",
         "C:/Users/IT2/Documents/Arduino/libraries/**",
         "C:/Users/IT2/Documents/Arduino/libraries/ArduinoJson/src",
-        "C:/Users/IT2/.arduino15/packages/esp32/hardware/esp32/**"
       ],
       "defines": [
         "ARDUINO=10805",
