@@ -3,6 +3,7 @@
 #include "../system/types.h"
 #include "../input/input.h"
 #include "../mapping/mapping.h"
+#include "../config/preferences_storage.h"
 #include "../utils/log.h"
 
 RawInput input;
@@ -27,8 +28,14 @@ const char* controllerStateToString(ControllerState state) {
 }
 
 void initControl() {
+    initPreferencesStorage();
+    const AppConfig appConfig = loadPreferencesConfig();
+
     initInput();
-    initMapping();
+    initMapping(appConfig.mappingJson.c_str());
+
+    logf(INFO, "Config: WiFi SSID len=%u API=%s", appConfig.wifiSsid.length(),
+         appConfig.apiEndpoint.c_str());
 
     // Configure output pins from mapping config (no hardcoded pins here).
     const MappingConfig& mapCfg = getMappingConfig();

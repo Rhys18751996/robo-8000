@@ -5,7 +5,6 @@
 #include <string.h>
 
 #include "../utils/log.h"
-#include "../config/mapping_json.h"
 
 namespace {
 // Default internal mapping values.
@@ -81,9 +80,9 @@ bool readButtonByName(const RawInput& input, const char* buttonName) {
 }
 }  // namespace
 
-void initMapping() {
+void initMapping(const char* mappingJson) {
     StaticJsonDocument<896> doc;
-    DeserializationError error = deserializeJson(doc, kDefaultMappingJson);
+    DeserializationError error = deserializeJson(doc, mappingJson);
 
     if (error) {
         // Keep built-in defaults if JSON parse fails.
