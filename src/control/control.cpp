@@ -17,6 +17,8 @@ bool lastPulseAction = false;
 bool lastToggleAction = false;
 bool togglePinState = false;
 unsigned long pulsePinDeactivateAtMs = 0;
+bool inputSnapshotLoggingEnabled = true;
+bool buttonChangeLoggingEnabled = true;
 
 void appendToken(char* buffer, size_t size, bool& hasAny, const char* token) {
     if (!token || !buffer || size == 0) return;
@@ -102,13 +104,13 @@ void readInputs() {
     static unsigned long lastSnapshotMs = 0;
     char buttonsText[160];
     buildPressedButtonsText(input, buttonsText, sizeof(buttonsText));
-    if (strcmp(buttonsText, lastButtonsText) != 0) {
+    if (buttonChangeLoggingEnabled && strcmp(buttonsText, lastButtonsText) != 0) {
         logf(INFO, "Buttons: %s", buttonsText);
-        strlcpy(lastButtonsText, buttonsText, sizeof(lastButtonsText));
     }
+    strlcpy(lastButtonsText, buttonsText, sizeof(lastButtonsText));
 
     const unsigned long nowMs = millis();
-    if (lastSnapshotMs == 0 || nowMs - lastSnapshotMs >= 250) {
+    if (inputSnapshotLoggingEnabled && (lastSnapshotMs == 0 || nowMs - lastSnapshotMs >= 250)) {
         lastSnapshotMs = nowMs;
         logf(INFO,
              "Input LX:%+.2f LY:%+.2f RX:%+.2f RY:%+.2f LT:%.2f RT:%.2f | "
@@ -172,4 +174,22 @@ void update() {
     }
 
     outputControl();
+}
+
+void setInputSnapshotLoggingEnabled(bool enabled) {
+    inputSnapshotLoggingEnabled = enabled;
+    logf(INFO, "Input snapshot logging: %s", enabled ? "ON" : "OFF");
+}
+
+bool isInputSnapshotLoggingEnabled() {
+    return inputSnapshotLoggingEnabled;
+}
+
+void setButtonChangeLoggingEnabled(bool enabled) {
+    buttonChangeLoggingEnabled = enabled;
+    logf(INFO, "Button change logging: %s", enabled ? "ON" : "OFF");
+}
+
+bool isButtonChangeLoggingEnabled() {
+    return buttonChangeLoggingEnabled;
 }

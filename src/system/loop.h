@@ -4,3 +4,6 @@
 
 void initLoop();
 void updateLoop();
+
+void setHeartbeatLoggingEnabled(bool enabled);
+bool isHeartbeatLoggingEnabled();

@@ -8,6 +8,15 @@
 #include "src/config/preferences_storage.h"
 
 namespace {
+void logAvailableSerialCommands() {
+    log(INFO, "Available commands:");
+    log(INFO, "  show_config");
+    log(INFO, "  heartbeat_on / heartbeat_off");
+    log(INFO, "  input_on / input_off");
+    log(INFO, "  buttons_on / buttons_off");
+    log(INFO, "  show_logs");
+}
+
 void handleSerialCommands() {
     static String buffer;
 
@@ -23,9 +32,27 @@ void handleSerialCommands() {
             if (buffer == "show_config") {
                 const AppConfig config = loadPreferencesConfig();
                 logPreferencesConfig(config);
+            } else if (buffer == "heartbeat_on") {
+                setHeartbeatLoggingEnabled(true);
+            } else if (buffer == "heartbeat_off") {
+                setHeartbeatLoggingEnabled(false);
+            } else if (buffer == "input_on") {
+                setInputSnapshotLoggingEnabled(true);
+            } else if (buffer == "input_off") {
+                setInputSnapshotLoggingEnabled(false);
+            } else if (buffer == "buttons_on") {
+                setButtonChangeLoggingEnabled(true);
+            } else if (buffer == "buttons_off") {
+                setButtonChangeLoggingEnabled(false);
+            } else if (buffer == "show_logs") {
+                logf(INFO, "heartbeat=%s input=%s buttons=%s",
+                     isHeartbeatLoggingEnabled() ? "ON" : "OFF",
+                     isInputSnapshotLoggingEnabled() ? "ON" : "OFF",
+                     isButtonChangeLoggingEnabled() ? "ON" : "OFF");
+                logAvailableSerialCommands();
             } else {
                 logf(WARN, "Unknown command: %s", buffer.c_str());
-                log(INFO, "Available commands: show_config");
+                logAvailableSerialCommands();
             }
 
             buffer = "";

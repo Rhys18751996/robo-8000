@@ -9,6 +9,7 @@ const int LOOP_INTERVAL_MS = 20; // 50Hz
 
 static unsigned long lastUpdate = 0;
 static int counter = 0;
+static bool heartbeatLoggingEnabled = true;
 
 void initLoop() {
     log(INFO, "Loop initialized");
@@ -26,9 +27,18 @@ void updateLoop() {
         }
 
         counter++;
-        if (counter % 50 == 0) {
+        if (heartbeatLoggingEnabled && counter % 50 == 0) {
             logf(INFO, "HeartBeat: %lu", lastUpdate/1000);
         }
         update();
     }
+}
+
+void setHeartbeatLoggingEnabled(bool enabled) {
+    heartbeatLoggingEnabled = enabled;
+    logf(INFO, "Heartbeat logging: %s", enabled ? "ON" : "OFF");
+}
+
+bool isHeartbeatLoggingEnabled() {
+    return heartbeatLoggingEnabled;
 }
