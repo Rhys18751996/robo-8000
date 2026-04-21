@@ -13,6 +13,8 @@ constexpr const char* kKeyWifiPass = "wifi_pass";
 constexpr const char* kKeyApiEndpoint = "api_endpoint";
 constexpr const char* kKeyMappingJson = "mapping_json";
 
+// Fallback API endpoint used when none has been saved yet.
+// 192.168.4.1 is commonly used as the device/AP gateway during config mode.
 constexpr const char* kDefaultApiEndpoint = "http://192.168.4.1/api/intent";
 
 Preferences prefs;
@@ -129,4 +131,14 @@ bool savePreferencesConfig(const AppConfig& config) {
 
     log(ERROR, "Failed to save one or more config keys");
     return false;
+}
+
+
+void logPreferencesConfig(const AppConfig& config) {
+    log(INFO, "--- Active Preferences Config ---");
+    logf(INFO, "wifiSsid: %s", config.wifiSsid.c_str());
+    logf(INFO, "wifiPassword: %s", config.wifiPassword.c_str());
+    logf(INFO, "apiEndpoint: %s", config.apiEndpoint.c_str());
+    logf(INFO, "mappingJson: %s", config.mappingJson.c_str());
+    log(INFO, "--- End Preferences Config ---");
 }

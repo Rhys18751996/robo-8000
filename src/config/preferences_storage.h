@@ -16,3 +16,6 @@ bool savePreferencesConfig(const AppConfig& config);
 
 // Safe defaults used when preferences are missing or invalid.
 AppConfig defaultAppConfig();
+
+// Debug helper: prints the full active config to Serial logs.
+void logPreferencesConfig(const AppConfig& config);
