@@ -10,3 +10,6 @@ bool isInputSnapshotLoggingEnabled();
 
 void setButtonChangeLoggingEnabled(bool enabled);
 bool isButtonChangeLoggingEnabled();
+
+void setIntentLoggingEnabled(bool enabled);
+bool isIntentLoggingEnabled();

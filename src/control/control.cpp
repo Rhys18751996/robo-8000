@@ -19,6 +19,7 @@ bool togglePinState = false;
 unsigned long pulsePinDeactivateAtMs = 0;
 bool inputSnapshotLoggingEnabled = true;
 bool buttonChangeLoggingEnabled = true;
+bool intentLoggingEnabled = true;
 
 void appendToken(char* buffer, size_t size, bool& hasAny, const char* token) {
     if (!token || !buffer || size == 0) return;
@@ -168,7 +169,7 @@ void update() {
     static int debugCounter = 0;
     debugCounter++;
 
-    if (debugCounter % 50 == 0) {
+    if (intentLoggingEnabled && debugCounter % 50 == 0) {
         logf(INFO, "Intent L: %.2f A: %.2f Conn: %d", currentIntent.linear,
              currentIntent.angular, input.connected);
     }
@@ -192,4 +193,13 @@ void setButtonChangeLoggingEnabled(bool enabled) {
 
 bool isButtonChangeLoggingEnabled() {
     return buttonChangeLoggingEnabled;
+}
+
+void setIntentLoggingEnabled(bool enabled) {
+    intentLoggingEnabled = enabled;
+    logf(INFO, "Intent logging: %s", enabled ? "ON" : "OFF");
+}
+
+bool isIntentLoggingEnabled() {
+    return intentLoggingEnabled;
 }

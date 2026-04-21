@@ -14,6 +14,7 @@ void logAvailableSerialCommands() {
     log(INFO, "  heartbeat_on / heartbeat_off");
     log(INFO, "  input_on / input_off");
     log(INFO, "  buttons_on / buttons_off");
+    log(INFO, "  intent_on / intent_off");
     log(INFO, "  show_logs");
 }
 
@@ -44,11 +45,16 @@ void handleSerialCommands() {
                 setButtonChangeLoggingEnabled(true);
             } else if (buffer == "buttons_off") {
                 setButtonChangeLoggingEnabled(false);
+            } else if (buffer == "intent_on") {
+                setIntentLoggingEnabled(true);
+            } else if (buffer == "intent_off") {
+                setIntentLoggingEnabled(false);
             } else if (buffer == "show_logs") {
-                logf(INFO, "heartbeat=%s input=%s buttons=%s",
+                logf(INFO, "heartbeat=%s input=%s buttons=%s intent=%s",
                      isHeartbeatLoggingEnabled() ? "ON" : "OFF",
                      isInputSnapshotLoggingEnabled() ? "ON" : "OFF",
-                     isButtonChangeLoggingEnabled() ? "ON" : "OFF");
+                     isButtonChangeLoggingEnabled() ? "ON" : "OFF",
+                     isIntentLoggingEnabled() ? "ON" : "OFF");
                 logAvailableSerialCommands();
             } else {
                 logf(WARN, "Unknown command: %s", buffer.c_str());
