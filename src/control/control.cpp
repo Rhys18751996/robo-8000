@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <math.h>
 #include <string.h>
 
 #include "../system/types.h"
@@ -97,10 +96,10 @@ void readInputs() {
     }
 
     // Readable input diagnostics:
-    // - Buttons are logged only when the pressed-set changes.
-    // - Axes are logged at low rate and only when significantly moved.
+    // - Button names are logged when the pressed-set changes.
+    // - A full input snapshot is logged periodically, even when idle.
     static char lastButtonsText[160] = "";
-    static int axisLogCounter = 0;
+    static unsigned long lastSnapshotMs = 0;
     char buttonsText[160];
     buildPressedButtonsText(input, buttonsText, sizeof(buttonsText));
     if (strcmp(buttonsText, lastButtonsText) != 0) {
@@ -108,15 +107,16 @@ void readInputs() {
         strlcpy(lastButtonsText, buttonsText, sizeof(lastButtonsText));
     }
 
-    axisLogCounter++;
-    const bool sticksMoved =
-        fabsf(input.leftStickX) > 0.15f || fabsf(input.leftStickY) > 0.15f ||
-        fabsf(input.rightStickX) > 0.15f || fabsf(input.rightStickY) > 0.15f;
-    const bool triggersMoved = input.leftTrigger > 0.10f || input.rightTrigger > 0.10f;
-    if ((sticksMoved || triggersMoved) && (axisLogCounter % 10 == 0)) {
-        logf(INFO, "Axes LX:%+.2f LY:%+.2f RX:%+.2f RY:%+.2f LT:%.2f RT:%.2f",
-             input.leftStickX, input.leftStickY, input.rightStickX,
-             input.rightStickY, input.leftTrigger, input.rightTrigger);
+    const unsigned long nowMs = millis();
+    if (lastSnapshotMs == 0 || nowMs - lastSnapshotMs >= 250) {
+        lastSnapshotMs = nowMs;
+        logf(INFO,
+             "Input LX:%+.2f LY:%+.2f RX:%+.2f RY:%+.2f LT:%.2f RT:%.2f | "
+             "A:%d B:%d X:%d Y:%d LB:%d RB:%d L3:%d R3:%d U:%d D:%d L:%d R:%d Start:%d Back:%d Guide:%d",
+             input.leftStickX, input.leftStickY, input.rightStickX, input.rightStickY,
+             input.leftTrigger, input.rightTrigger, input.A, input.B, input.X, input.Y,
+             input.LB, input.RB, input.leftStickClick, input.rightStickClick, input.dpadUp,
+             input.dpadDown, input.dpadLeft, input.dpadRight, input.start, input.back, input.guide);
     }
 }
 
