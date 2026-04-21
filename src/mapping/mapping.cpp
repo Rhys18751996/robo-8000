@@ -1,6 +1,7 @@
 #include "mapping.h"
 
 #include <ArduinoJson.h> //ArduinoJson by Benoit Blanchon
+#include <ctype.h>
 #include <math.h>
 #include <string.h>
 
@@ -44,14 +45,25 @@ float smooth(float current, float previous, float alpha) {
     return alpha * current + (1.0f - alpha) * previous;
 }
 
+// Case-insensitive equality for mapping names from JSON / NVS.
+bool equalsIgnoreCase(const char* a, const char* b) {
+    if (!a || !b) return false;
+    while (*a && *b) {
+        if (tolower(*a) != tolower(*b)) return false;
+        ++a;
+        ++b;
+    }
+    return *a == '\0' && *b == '\0';
+}
+
 // Convert configured axis name to the matching RawInput field.
 float readAxisByName(const RawInput& input, const char* axisName) {
-    if (strcmp(axisName, "leftStickX") == 0) return input.leftStickX;
-    if (strcmp(axisName, "leftStickY") == 0) return input.leftStickY;
-    if (strcmp(axisName, "rightStickX") == 0) return input.rightStickX;
-    if (strcmp(axisName, "rightStickY") == 0) return input.rightStickY;
-    if (strcmp(axisName, "leftTrigger") == 0) return input.leftTrigger;
-    if (strcmp(axisName, "rightTrigger") == 0) return input.rightTrigger;
+    if (equalsIgnoreCase(axisName, "leftStickX") || equalsIgnoreCase(axisName, "lx")) return input.leftStickX;
+    if (equalsIgnoreCase(axisName, "leftStickY") || equalsIgnoreCase(axisName, "ly")) return input.leftStickY;
+    if (equalsIgnoreCase(axisName, "rightStickX") || equalsIgnoreCase(axisName, "rx")) return input.rightStickX;
+    if (equalsIgnoreCase(axisName, "rightStickY") || equalsIgnoreCase(axisName, "ry")) return input.rightStickY;
+    if (equalsIgnoreCase(axisName, "leftTrigger") || equalsIgnoreCase(axisName, "lt")) return input.leftTrigger;
+    if (equalsIgnoreCase(axisName, "rightTrigger") || equalsIgnoreCase(axisName, "rt")) return input.rightTrigger;
 
     logf(WARN, "Unknown axis in mapping: %s", axisName);
     return 0.0f;
@@ -59,21 +71,21 @@ float readAxisByName(const RawInput& input, const char* axisName) {
 
 // Convert configured button name to the matching RawInput field.
 bool readButtonByName(const RawInput& input, const char* buttonName) {
-    if (strcmp(buttonName, "A") == 0) return input.A;
-    if (strcmp(buttonName, "B") == 0) return input.B;
-    if (strcmp(buttonName, "X") == 0) return input.X;
-    if (strcmp(buttonName, "Y") == 0) return input.Y;
-    if (strcmp(buttonName, "LB") == 0) return input.LB;
-    if (strcmp(buttonName, "RB") == 0) return input.RB;
-    if (strcmp(buttonName, "leftStickClick") == 0) return input.leftStickClick;
-    if (strcmp(buttonName, "rightStickClick") == 0) return input.rightStickClick;
-    if (strcmp(buttonName, "dpadUp") == 0) return input.dpadUp;
-    if (strcmp(buttonName, "dpadDown") == 0) return input.dpadDown;
-    if (strcmp(buttonName, "dpadLeft") == 0) return input.dpadLeft;
-    if (strcmp(buttonName, "dpadRight") == 0) return input.dpadRight;
-    if (strcmp(buttonName, "start") == 0) return input.start;
-    if (strcmp(buttonName, "back") == 0) return input.back;
-    if (strcmp(buttonName, "guide") == 0) return input.guide;
+    if (equalsIgnoreCase(buttonName, "A") || equalsIgnoreCase(buttonName, "cross")) return input.A;
+    if (equalsIgnoreCase(buttonName, "B") || equalsIgnoreCase(buttonName, "circle")) return input.B;
+    if (equalsIgnoreCase(buttonName, "X") || equalsIgnoreCase(buttonName, "square")) return input.X;
+    if (equalsIgnoreCase(buttonName, "Y") || equalsIgnoreCase(buttonName, "triangle")) return input.Y;
+    if (equalsIgnoreCase(buttonName, "LB") || equalsIgnoreCase(buttonName, "l1")) return input.LB;
+    if (equalsIgnoreCase(buttonName, "RB") || equalsIgnoreCase(buttonName, "r1")) return input.RB;
+    if (equalsIgnoreCase(buttonName, "leftStickClick") || equalsIgnoreCase(buttonName, "ls") || equalsIgnoreCase(buttonName, "thumbL")) return input.leftStickClick;
+    if (equalsIgnoreCase(buttonName, "rightStickClick") || equalsIgnoreCase(buttonName, "rs") || equalsIgnoreCase(buttonName, "thumbR")) return input.rightStickClick;
+    if (equalsIgnoreCase(buttonName, "dpadUp")) return input.dpadUp;
+    if (equalsIgnoreCase(buttonName, "dpadDown")) return input.dpadDown;
+    if (equalsIgnoreCase(buttonName, "dpadLeft")) return input.dpadLeft;
+    if (equalsIgnoreCase(buttonName, "dpadRight")) return input.dpadRight;
+    if (equalsIgnoreCase(buttonName, "start") || equalsIgnoreCase(buttonName, "menu")) return input.start;
+    if (equalsIgnoreCase(buttonName, "back") || equalsIgnoreCase(buttonName, "select") || equalsIgnoreCase(buttonName, "view")) return input.back;
+    if (equalsIgnoreCase(buttonName, "guide") || equalsIgnoreCase(buttonName, "system") || equalsIgnoreCase(buttonName, "home")) return input.guide;
 
     logf(WARN, "Unknown button in mapping: %s", buttonName);
     return false;
