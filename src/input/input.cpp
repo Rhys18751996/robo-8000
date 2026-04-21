@@ -10,3 +10,7 @@ void initInput() {
 RawInput readInput() {
     return GamepadManager::read();
 }
+
+int readControllerBatteryPercent() {
+    return GamepadManager::readBatteryPercent();
+}

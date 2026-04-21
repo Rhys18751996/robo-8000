@@ -41,9 +41,11 @@ struct RawInput {
     bool guide;     // Xbox button
 
     // --- Meta ---
+    int batteryPercent;  // -1 when unavailable
     bool connected;
     ControllerState state;
 };
 
 void initInput();
 RawInput readInput();
+int readControllerBatteryPercent();

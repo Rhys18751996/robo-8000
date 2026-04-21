@@ -1,6 +1,7 @@
 #include "mapping.h"
 
 #include <ArduinoJson.h> //ArduinoJson by Benoit Blanchon
+#include <ctype.h>
 #include <math.h>
 #include <string.h>
 
@@ -44,38 +45,78 @@ float smooth(float current, float previous, float alpha) {
     return alpha * current + (1.0f - alpha) * previous;
 }
 
+bool isIgnorableNameChar(char c) {
+    return c == ' ' || c == '_' || c == '-';
+}
+
+// Case-insensitive comparison with tolerant formatting:
+// ignores spaces/underscores/hyphens from mapping JSON.
+bool equalsNormalized(const char* a, const char* b) {
+    if (!a || !b) return false;
+    while (*a || *b) {
+        while (*a && isIgnorableNameChar(*a)) ++a;
+        while (*b && isIgnorableNameChar(*b)) ++b;
+        if (!*a || !*b) break;
+        if (tolower(*a) != tolower(*b)) return false;
+        ++a;
+        ++b;
+    }
+    while (*a && isIgnorableNameChar(*a)) ++a;
+    while (*b && isIgnorableNameChar(*b)) ++b;
+    return *a == '\0' && *b == '\0';
+}
+
+void warnUnknownOnce(const char* type, const char* name) {
+    static char seen[12][24] = {};
+    const char* safeName = (name && name[0] != '\0') ? name : "<empty>";
+
+    for (size_t i = 0; i < 12; ++i) {
+        if (seen[i][0] == '\0') break;
+        if (strcmp(seen[i], safeName) == 0) return;
+    }
+
+    for (size_t i = 0; i < 12; ++i) {
+        if (seen[i][0] == '\0') {
+            strlcpy(seen[i], safeName, sizeof(seen[i]));
+            break;
+        }
+    }
+
+    logf(WARN, "Unknown %s in mapping: %s", type, safeName);
+}
+
 // Convert configured axis name to the matching RawInput field.
 float readAxisByName(const RawInput& input, const char* axisName) {
-    if (strcmp(axisName, "leftStickX") == 0) return input.leftStickX;
-    if (strcmp(axisName, "leftStickY") == 0) return input.leftStickY;
-    if (strcmp(axisName, "rightStickX") == 0) return input.rightStickX;
-    if (strcmp(axisName, "rightStickY") == 0) return input.rightStickY;
-    if (strcmp(axisName, "leftTrigger") == 0) return input.leftTrigger;
-    if (strcmp(axisName, "rightTrigger") == 0) return input.rightTrigger;
+    if (equalsNormalized(axisName, "leftStickX") || equalsNormalized(axisName, "lx")) return input.leftStickX;
+    if (equalsNormalized(axisName, "leftStickY") || equalsNormalized(axisName, "ly")) return input.leftStickY;
+    if (equalsNormalized(axisName, "rightStickX") || equalsNormalized(axisName, "rx")) return input.rightStickX;
+    if (equalsNormalized(axisName, "rightStickY") || equalsNormalized(axisName, "ry")) return input.rightStickY;
+    if (equalsNormalized(axisName, "leftTrigger") || equalsNormalized(axisName, "lt")) return input.leftTrigger;
+    if (equalsNormalized(axisName, "rightTrigger") || equalsNormalized(axisName, "rt")) return input.rightTrigger;
 
-    logf(WARN, "Unknown axis in mapping: %s", axisName);
+    warnUnknownOnce("axis", axisName);
     return 0.0f;
 }
 
 // Convert configured button name to the matching RawInput field.
 bool readButtonByName(const RawInput& input, const char* buttonName) {
-    if (strcmp(buttonName, "A") == 0) return input.A;
-    if (strcmp(buttonName, "B") == 0) return input.B;
-    if (strcmp(buttonName, "X") == 0) return input.X;
-    if (strcmp(buttonName, "Y") == 0) return input.Y;
-    if (strcmp(buttonName, "LB") == 0) return input.LB;
-    if (strcmp(buttonName, "RB") == 0) return input.RB;
-    if (strcmp(buttonName, "leftStickClick") == 0) return input.leftStickClick;
-    if (strcmp(buttonName, "rightStickClick") == 0) return input.rightStickClick;
-    if (strcmp(buttonName, "dpadUp") == 0) return input.dpadUp;
-    if (strcmp(buttonName, "dpadDown") == 0) return input.dpadDown;
-    if (strcmp(buttonName, "dpadLeft") == 0) return input.dpadLeft;
-    if (strcmp(buttonName, "dpadRight") == 0) return input.dpadRight;
-    if (strcmp(buttonName, "start") == 0) return input.start;
-    if (strcmp(buttonName, "back") == 0) return input.back;
-    if (strcmp(buttonName, "guide") == 0) return input.guide;
+    if (equalsNormalized(buttonName, "A") || equalsNormalized(buttonName, "cross")) return input.A;
+    if (equalsNormalized(buttonName, "B") || equalsNormalized(buttonName, "circle")) return input.B;
+    if (equalsNormalized(buttonName, "X") || equalsNormalized(buttonName, "square")) return input.X;
+    if (equalsNormalized(buttonName, "Y") || equalsNormalized(buttonName, "triangle")) return input.Y;
+    if (equalsNormalized(buttonName, "LB") || equalsNormalized(buttonName, "l1")) return input.LB;
+    if (equalsNormalized(buttonName, "RB") || equalsNormalized(buttonName, "r1")) return input.RB;
+    if (equalsNormalized(buttonName, "leftStickClick") || equalsNormalized(buttonName, "ls") || equalsNormalized(buttonName, "thumbL")) return input.leftStickClick;
+    if (equalsNormalized(buttonName, "rightStickClick") || equalsNormalized(buttonName, "rs") || equalsNormalized(buttonName, "thumbR")) return input.rightStickClick;
+    if (equalsNormalized(buttonName, "dpadUp")) return input.dpadUp;
+    if (equalsNormalized(buttonName, "dpadDown")) return input.dpadDown;
+    if (equalsNormalized(buttonName, "dpadLeft")) return input.dpadLeft;
+    if (equalsNormalized(buttonName, "dpadRight")) return input.dpadRight;
+    if (equalsNormalized(buttonName, "start") || equalsNormalized(buttonName, "menu")) return input.start;
+    if (equalsNormalized(buttonName, "back") || equalsNormalized(buttonName, "select") || equalsNormalized(buttonName, "view")) return input.back;
+    if (equalsNormalized(buttonName, "guide") || equalsNormalized(buttonName, "system") || equalsNormalized(buttonName, "home")) return input.guide;
 
-    logf(WARN, "Unknown button in mapping: %s", buttonName);
+    warnUnknownOnce("button", buttonName);
     return false;
 }
 }  // namespace
