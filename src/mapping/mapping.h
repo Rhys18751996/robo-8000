@@ -42,7 +42,7 @@ struct MappingConfig {
 };
 
 // Parse JSON once and populate MappingConfig defaults/overrides.
-void initMapping();
+void initMapping(const char* mappingJson);
 
 // Main translation function: RawInput -> Intent.
 Intent mapInputToIntent(const RawInput& input);
