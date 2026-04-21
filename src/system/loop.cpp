@@ -9,7 +9,7 @@ const int LOOP_INTERVAL_MS = 20; // 50Hz
 
 static unsigned long lastUpdate = 0;
 static int counter = 0;
-static bool heartbeatLoggingEnabled = true;
+static bool heartbeatLoggingEnabled = false;
 
 void initLoop() {
     log(INFO, "Loop initialized");

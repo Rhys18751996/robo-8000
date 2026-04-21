@@ -8,6 +8,7 @@ class GamepadManager {
 public:
     static void setup();
     static RawInput read();
+    static int readBatteryPercent();
 
 private:
     static ControllerPtr controllers[BP32_MAX_GAMEPADS];

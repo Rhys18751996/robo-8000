@@ -69,6 +69,7 @@ ControllerPtr GamepadManager::getActiveController() {
 
 RawInput GamepadManager::read() {
     RawInput input = {};
+    input.batteryPercent = -1;
 
     BP32.update();
 
@@ -108,6 +109,14 @@ RawInput GamepadManager::read() {
     input.start = misc & MISC_BUTTON_START;
     input.back = misc & MISC_BUTTON_SELECT;
     input.guide = misc & MISC_BUTTON_SYSTEM;
+    input.batteryPercent = ctl->battery();
 
     return input;
+}
+
+int GamepadManager::readBatteryPercent() {
+    BP32.update();
+    ControllerPtr ctl = getActiveController();
+    if (!ctl) return -1;
+    return ctl->battery();
 }

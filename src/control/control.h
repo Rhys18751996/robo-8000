@@ -13,3 +13,6 @@ bool isButtonChangeLoggingEnabled();
 
 void setIntentLoggingEnabled(bool enabled);
 bool isIntentLoggingEnabled();
+
+void setBatteryLoggingEnabled(bool enabled);
+bool isBatteryLoggingEnabled();

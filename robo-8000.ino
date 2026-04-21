@@ -3,6 +3,7 @@
 #include <Arduino.h>
 
 #include "src/control/control.h"
+#include "src/input/input.h"
 #include "src/system/loop.h"
 #include "src/utils/log.h"
 #include "src/config/preferences_storage.h"
@@ -15,6 +16,8 @@ void logAvailableSerialCommands() {
     log(INFO, "  input_on / input_off");
     log(INFO, "  buttons_on / buttons_off");
     log(INFO, "  intent_on / intent_off");
+    log(INFO, "  battery_on / battery_off");
+    log(INFO, "  show_battery");
     log(INFO, "  show_logs");
 }
 
@@ -49,12 +52,24 @@ void handleSerialCommands() {
                 setIntentLoggingEnabled(true);
             } else if (buffer == "intent_off") {
                 setIntentLoggingEnabled(false);
+            } else if (buffer == "battery_on") {
+                setBatteryLoggingEnabled(true);
+            } else if (buffer == "battery_off") {
+                setBatteryLoggingEnabled(false);
+            } else if (buffer == "show_battery") {
+                const int battery = readControllerBatteryPercent();
+                if (battery >= 0) {
+                    logf(INFO, "Controller battery: %d%%", battery);
+                } else {
+                    log(WARN, "Controller battery unavailable (no connected controller)");
+                }
             } else if (buffer == "show_logs") {
-                logf(INFO, "heartbeat=%s input=%s buttons=%s intent=%s",
+                logf(INFO, "heartbeat=%s input=%s buttons=%s intent=%s battery=%s",
                      isHeartbeatLoggingEnabled() ? "ON" : "OFF",
                      isInputSnapshotLoggingEnabled() ? "ON" : "OFF",
                      isButtonChangeLoggingEnabled() ? "ON" : "OFF",
-                     isIntentLoggingEnabled() ? "ON" : "OFF");
+                     isIntentLoggingEnabled() ? "ON" : "OFF",
+                     isBatteryLoggingEnabled() ? "ON" : "OFF");
                 logAvailableSerialCommands();
             } else {
                 logf(WARN, "Unknown command: %s", buffer.c_str());

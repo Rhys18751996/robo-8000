@@ -18,8 +18,9 @@ bool lastToggleAction = false;
 bool togglePinState = false;
 unsigned long pulsePinDeactivateAtMs = 0;
 bool inputSnapshotLoggingEnabled = true;
-bool buttonChangeLoggingEnabled = true;
-bool intentLoggingEnabled = true;
+bool buttonChangeLoggingEnabled = false;
+bool intentLoggingEnabled = false;
+bool batteryLoggingEnabled = false;
 
 void appendToken(char* buffer, size_t size, bool& hasAny, const char* token) {
     if (!token || !buffer || size == 0) return;
@@ -113,13 +114,24 @@ void readInputs() {
     const unsigned long nowMs = millis();
     if (inputSnapshotLoggingEnabled && (lastSnapshotMs == 0 || nowMs - lastSnapshotMs >= 250)) {
         lastSnapshotMs = nowMs;
-        logf(INFO,
-             "Input LX:%+.2f LY:%+.2f RX:%+.2f RY:%+.2f LT:%.2f RT:%.2f | "
-             "A:%d B:%d X:%d Y:%d LB:%d RB:%d L3:%d R3:%d U:%d D:%d L:%d R:%d Start:%d Back:%d Guide:%d",
-             input.leftStickX, input.leftStickY, input.rightStickX, input.rightStickY,
-             input.leftTrigger, input.rightTrigger, input.A, input.B, input.X, input.Y,
-             input.LB, input.RB, input.leftStickClick, input.rightStickClick, input.dpadUp,
-             input.dpadDown, input.dpadLeft, input.dpadRight, input.start, input.back, input.guide);
+        if (batteryLoggingEnabled) {
+            logf(INFO,
+                 "Input LX:%+.2f LY:%+.2f RX:%+.2f RY:%+.2f LT:%.2f RT:%.2f Bat:%d%% | "
+                 "A:%d B:%d X:%d Y:%d LB:%d RB:%d L3:%d R3:%d U:%d D:%d L:%d R:%d Start:%d Back:%d Guide:%d",
+                 input.leftStickX, input.leftStickY, input.rightStickX, input.rightStickY,
+                 input.leftTrigger, input.rightTrigger, input.batteryPercent, input.A, input.B,
+                 input.X, input.Y, input.LB, input.RB, input.leftStickClick,
+                 input.rightStickClick, input.dpadUp, input.dpadDown, input.dpadLeft,
+                 input.dpadRight, input.start, input.back, input.guide);
+        } else {
+            logf(INFO,
+                 "Input LX:%+.2f LY:%+.2f RX:%+.2f RY:%+.2f LT:%.2f RT:%.2f | "
+                 "A:%d B:%d X:%d Y:%d LB:%d RB:%d L3:%d R3:%d U:%d D:%d L:%d R:%d Start:%d Back:%d Guide:%d",
+                 input.leftStickX, input.leftStickY, input.rightStickX, input.rightStickY,
+                 input.leftTrigger, input.rightTrigger, input.A, input.B, input.X, input.Y,
+                 input.LB, input.RB, input.leftStickClick, input.rightStickClick, input.dpadUp,
+                 input.dpadDown, input.dpadLeft, input.dpadRight, input.start, input.back, input.guide);
+        }
     }
 }
 
@@ -202,4 +214,13 @@ void setIntentLoggingEnabled(bool enabled) {
 
 bool isIntentLoggingEnabled() {
     return intentLoggingEnabled;
+}
+
+void setBatteryLoggingEnabled(bool enabled) {
+    batteryLoggingEnabled = enabled;
+    logf(INFO, "Battery in input logs: %s", enabled ? "ON" : "OFF");
+}
+
+bool isBatteryLoggingEnabled() {
+    return batteryLoggingEnabled;
 }
