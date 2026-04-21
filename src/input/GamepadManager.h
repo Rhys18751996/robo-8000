@@ -2,10 +2,12 @@
 
 #include <Bluepad32.h>
 
+#include "input.h"
+
 class GamepadManager {
 public:
     static void setup();
-    static void update();
+    static RawInput read();
 
 private:
     static ControllerPtr controllers[BP32_MAX_GAMEPADS];
@@ -13,5 +15,10 @@ private:
     static void onConnectedController(ControllerPtr ctl);
     static void onDisconnectedController(ControllerPtr ctl);
 
-    static void processGamepad(ControllerPtr ctl);
+    static ControllerPtr getActiveController();
+
+    static float clamp01(float v);
+    static float clamp11(float v);
+    static float normAxis(int v);
+    static float normTrigger(int v);
 };
