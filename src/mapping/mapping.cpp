@@ -82,7 +82,7 @@ void warnUnknownOnce(const char* type, const char* name) {
         }
     }
 
-    logf(WARN, "Unknown %s in mapping: %s", type, safeName);
+    //logf(WARN, "Unknown %s in mapping: %s", type, safeName);
 }
 
 // Convert configured axis name to the matching RawInput field.
