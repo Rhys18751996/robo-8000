@@ -9,3 +9,12 @@ esp32 / bluepad32 / arduino project
     - https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json,https://raw.githubusercontent.com/ricardoquesada/esp32-arduino-lib-builder/master/bluepad32_files/package_esp32_bluepad32_index.json
 - install library "ArduinoJson by Benoit Blanchon"
 - install board manager "esp32_bluepad32 by Ricardo Quesada"
+
+---
+
+## Windows COM PORT driver
+
+- need to install CP210x driver (https://www.silabs.com/documents/public/software/CP210x_Universal_Windows_Driver.zip) 
+
+---
+
