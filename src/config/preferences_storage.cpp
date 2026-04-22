@@ -77,6 +77,7 @@ void initPreferencesStorage() {
     }
 }
 
+// wifiSsid is the target Wi‑Fi network SSID the robo-8000 will try to join when in RUN mode
 AppConfig defaultAppConfig() {
     AppConfig config;
     config.wifiSsid = "";

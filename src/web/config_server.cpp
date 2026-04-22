@@ -8,7 +8,13 @@
 #include "../utils/log.h"
 
 namespace {
+// The AP SSID your phone connects to when robo-8000 is in CONFIG mode is hardcoded as "RobotConfig"
+
+// Once your phone connects to the ESP32 AP (RobotConfig), use:
+// http://192.168.4.1/ → config page (GET /) 
+// http://192.168.4.1/save → save config (POST /save)
 constexpr const char* kApSsid = "RobotConfig";
+
 WebServer server(80);
 bool serverRunning = false;
 
