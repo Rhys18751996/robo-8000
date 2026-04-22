@@ -4,6 +4,7 @@
 #include "loop.h"
 #include "../utils/log.h"
 #include "../control/control.h"
+#include "mode_manager.h"
 
 const int LOOP_INTERVAL_MS = 20; // 50Hz
 
@@ -12,6 +13,7 @@ static int counter = 0;
 static bool heartbeatLoggingEnabled = false;
 
 void initLoop() {
+    initModeManager();
     log(INFO, "Loop initialized");
 }
 
@@ -30,7 +32,11 @@ void updateLoop() {
         if (heartbeatLoggingEnabled && counter % 50 == 0) {
             logf(INFO, "HeartBeat: %lu", lastUpdate/1000);
         }
-        update();
+
+        updateModeManager();
+        if (isRunMode()) {
+            update();
+        }
     }
 }
 

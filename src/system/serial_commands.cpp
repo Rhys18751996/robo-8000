@@ -5,6 +5,7 @@
 #include "serial_commands.h"
 
 #include "loop.h"
+#include "mode_manager.h"
 
 #include "../control/control.h"
 #include "../input/input.h"
@@ -58,6 +59,24 @@ void cmd_show_battery(const String&) {
     }
 }
 
+
+void cmd_mode(const String& args) {
+    if (args.equalsIgnoreCase("config")) {
+        setSystemMode(CONFIG);
+        logSystemMode();
+    } else if (args.equalsIgnoreCase("run")) {
+        setSystemMode(RUN);
+        logSystemMode();
+    } else if (args.equalsIgnoreCase("toggle")) {
+        toggleSystemMode();
+        logSystemMode();
+    } else if (args.equalsIgnoreCase("show") || args.length() == 0) {
+        logSystemMode();
+    } else {
+        log(WARN, "Usage: mode config|run|toggle|show");
+    }
+}
+
 void cmd_show_logs(const String&) {
     logf(INFO, "heartbeat=%s input=%s buttons=%s intent=%s battery=%s",
          isHeartbeatLoggingEnabled() ? "ON" : "OFF",
@@ -79,6 +98,7 @@ Command commands[] = {
     {"battery_log",   cmd_battery_log},   // usage: battery_log on/off
     {"show_battery",  cmd_show_battery},
     {"show_logs",     cmd_show_logs},
+    {"mode",          cmd_mode},          // usage: mode config/run/toggle/show
 };
 
 const size_t commandCount = sizeof(commands) / sizeof(commands[0]);
@@ -94,6 +114,7 @@ void logAvailableSerialCommands() {
     log(INFO, "  battery_log on/off");
     log(INFO, "  show_battery");
     log(INFO, "  show_logs");
+    log(INFO, "  mode config/run/toggle/show");
 }
 
 // ---------- Parser ----------

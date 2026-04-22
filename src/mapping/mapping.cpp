@@ -82,7 +82,8 @@ void warnUnknownOnce(const char* type, const char* name) {
         }
     }
 
-    logf(WARN, "Unknown %s in mapping: %s", type, safeName);
+    // this spams the serial monitor even iff the buttons and inputs are all working
+    //logf(WARN, "Unknown %s in mapping: %s", type, safeName);
 }
 
 // Convert configured axis name to the matching RawInput field.

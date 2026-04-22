@@ -146,12 +146,16 @@ controller input → mapping → Intent
 **Goal:** Clean separation of system modes
 
 ### Tasks:
-- Toggle switch on GPIO
+- Toggle switch on GPIO (input)
+- Use switch to toggle system mode state
+- Add serial command to programmatically toggle system mode state
+- Add serial output log indicating the system mode state (this will Serialprint once whenever commanded on serial monitor) 
+- toggle GPIO(for led indicator) output depending on system mode state
 - Monitor continuously
 - Add debounce (~200ms)
 - Implement mode transitions
 
-### Modes:
+### System Modes:
 - Config Mode: AP + Web ON, Bluetooth OFF
 - Run Mode: WiFi + Bluetooth ON, Web OFF
 

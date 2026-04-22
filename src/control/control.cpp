@@ -71,7 +71,6 @@ void initControl() {
     initPreferencesStorage();
     const AppConfig appConfig = loadPreferencesConfig();
 
-    initInput();
     initMapping(appConfig.mappingJson.c_str());
 
     logf(INFO, "Config: WiFi SSID len=%u API=%s", appConfig.wifiSsid.length(),
