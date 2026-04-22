@@ -15,6 +15,10 @@ constexpr const char* kKeyMappingJson = "mapping_json";
 
 // Fallback API endpoint used when none has been saved yet.
 // 192.168.4.1 is commonly used as the device/AP gateway during config mode.
+/*
+The intent is to eventually use the same field as “open this device’s web UI,” defaulting to http://192.168.4.1/ which is more intuitive. 
+but forr ight now it’s just api/intent for the future API-post path.
+*/
 constexpr const char* kDefaultApiEndpoint = "http://192.168.4.1/api/intent";
 
 Preferences prefs;
