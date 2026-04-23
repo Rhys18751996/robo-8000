@@ -1,3 +1,4 @@
+// src/config/mapping_json.h
 #pragma once
 
 // Phase 2 default mapping (config-only JSON)

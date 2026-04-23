@@ -1,3 +1,4 @@
+// src/system/mode_manager.h
 #pragma once
 
 #include "types.h"

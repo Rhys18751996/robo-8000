@@ -1,5 +1,4 @@
 // src/system/types.h
-
 #pragma once
 
 // High-level command object used by the rest of the system.

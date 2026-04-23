@@ -1,3 +1,4 @@
+// src/system/mode_manager.cpp
 #include "mode_manager.h"
 
 #include <Arduino.h>

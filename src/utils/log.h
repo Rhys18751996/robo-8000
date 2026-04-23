@@ -1,5 +1,4 @@
 // src/utils/log.h
-
 #pragma once
 
 enum LogLevel {

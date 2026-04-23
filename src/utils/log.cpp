@@ -1,8 +1,8 @@
 // src/utils/log.cpp
-
 #include <Arduino.h>
-#include "log.h"
 #include <stdarg.h>
+
+#include "log.h"
 
 void log(LogLevel level, const char* message) {
     const char* prefix;

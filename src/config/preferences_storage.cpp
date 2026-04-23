@@ -1,3 +1,4 @@
+// src/config/preferences_storage.cpp
 #include "preferences_storage.h"
 
 #include <ArduinoJson.h> //ArduinoJson by Benoit Blanchon

@@ -1,5 +1,5 @@
+// src/config/preferences_storage.h
 #pragma once
-
 #include <Arduino.h>
 
 // Runtime configuration persisted in ESP32 NVS.
