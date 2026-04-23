@@ -7,10 +7,15 @@
 #include "../mapping/mapping.h"
 #include "../config/preferences_storage.h"
 #include "../utils/log.h"
+#include "../webClient/network.h"
 
 RawInput input;
 Intent currentIntent;
 static ControllerState lastState = ControllerState::Disconnected;
+
+const int SEND_INTERVAL_MS = 2000;
+static unsigned long lastSend = 0;
+unsigned long now = millis();
 
 namespace {
 // Edge detection + output state memory for GPIO actions.
@@ -74,7 +79,7 @@ void initControl() {
 
     initMapping(appConfig.mappingJson.c_str());
 
-    logf(INFO, "Config: WiFi SSID len=%u API=%s", appConfig.wifiSsid.length(),
+    logf(INFO, "Cnfg:SSID len=%u API=%s", appConfig.wifiSsid.length(),
          appConfig.apiEndpoint.c_str());
 
     // Configure output pins from mapping config (no hardcoded pins here).
@@ -86,8 +91,7 @@ void initControl() {
     digitalWrite(mapCfg.togglePin, LOW);
     digitalWrite(mapCfg.holdPin, LOW);
 
-    logf(INFO, "Output pins initialized: pulse=%u toggle=%u hold=%u", mapCfg.pulsePin,
-         mapCfg.togglePin, mapCfg.holdPin);
+    logf(INFO, "pulse=%u toggle=%u hold=%u", mapCfg.pulsePin, mapCfg.togglePin, mapCfg.holdPin);
 }
 
 void readInputs() {
@@ -184,6 +188,27 @@ void update() {
     if (intentLoggingEnabled && debugCounter % 50 == 0) {
         logf(INFO, "Intent L: %.2f A: %.2f Conn: %d", currentIntent.linear,
              currentIntent.angular, input.connected);
+    }
+
+    // API telemetry - build your payload (example)
+    if (now - lastSend >= 2000) {
+        lastSend = now;
+        char payload[256];
+        snprintf(payload, sizeof(payload),
+            "{\"lx\":%.2f,\"ly\":%.2f,\"rx\":%.2f,\"ry\":%.2f,"
+            "\"lt\":%.2f,\"rt\":%.2f,\"bat\":%d,"
+            "\"A\":%d,\"B\":%d,\"X\":%d,\"Y\":%d,"
+            "\"linear\":%.2f,\"angular\":%.2f,\"connected\":%s}",
+            input.leftStickX, input.leftStickY,
+            input.rightStickX, input.rightStickY,
+            input.leftTrigger, input.rightTrigger,
+            input.batteryPercent,
+            input.A, input.B, input.X, input.Y,
+            currentIntent.linear, currentIntent.angular,
+            input.connected ? "true" : "false"
+        );
+
+        queueTelemetrySend(String(payload));
     }
 
     outputControl();

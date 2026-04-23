@@ -7,7 +7,7 @@
 #include "../config/preferences_storage.h"
 #include "../input/input.h"
 #include "../utils/log.h"
-#include "../web/config_server.h"
+#include "../webServer/config_server.h"
 
 namespace {
 constexpr uint8_t kModeSwitchPin = 33;       // input, LOW=CONFIG HIGH=RUN (with pullup)

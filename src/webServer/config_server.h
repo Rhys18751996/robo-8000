@@ -1,4 +1,4 @@
-// src/web/config_server.h
+// src/webServer/config_server.h
 #pragma once
 
 void startConfigServer();

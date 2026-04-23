@@ -6,6 +6,7 @@
 #include "src/system/loop.h"
 #include "src/system/serial_commands.h"
 #include "src/utils/log.h"
+#include "src/webClient/network.h"
 
 void setup() {
     Serial.begin(115200);
@@ -14,6 +15,7 @@ void setup() {
     initControl();
     initLoop();
     initSerialCommands();
+    initWebClient();
 }
 
 void loop() {
