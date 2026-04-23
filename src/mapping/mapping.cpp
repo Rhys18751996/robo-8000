@@ -18,7 +18,7 @@ MappingConfig config = {
     "Y",
     "X",
     "A",
-    2,
+    16,
     4,
     5,
     120,
