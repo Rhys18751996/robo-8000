@@ -198,6 +198,24 @@ controller input → mapping → Intent
   - Minimum PWM to move motor (deadband)
   - Direction correctness
 
+### DRV8833:
+- The DRV8833 has 2 inputs per motor:
+  - AIN1, AIN2 → Motor A
+  - BIN1, BIN2 → Motor B
+- then
+  - ESP32 GPIO → AIN1
+  - ESP32 GPIO → AIN2
+  - ESP32 GPIO → BIN1
+  - ESP32 GPIO → BIN2
+- other pins
+  - VM → motor power (e.g. 3–10V)
+  - GND → common ground with ESP32
+  - VCC → logic power (often 3.3V, ESP32 compatible)
+- Truth Table
+  - 0	0	Coast
+  - 1	0	Forward
+  - 0	1	Reverse
+  - 1	1	Brake
 ### Example:
 ```cpp
 // basic test
