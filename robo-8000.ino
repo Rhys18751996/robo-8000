@@ -6,7 +6,7 @@
 #include "src/system/loop.h"
 #include "src/system/serial_commands.h"
 #include "src/utils/log.h"
-#include "src/utils/loop_profiler.cpp"
+#include "src/utils/loop_profiler.h"
 #include "src/webClient/network.h"
 
 void setup() {
