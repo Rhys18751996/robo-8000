@@ -216,6 +216,8 @@ controller input → mapping → Intent
   - 1	0	Forward
   - 0	1	Reverse
   - 1	1	Brake
+- GPIO choices (if available)
+  - 18, 19, 21, 22, 23, 25, 26, 27, 32, 33
 ### Example:
 ```cpp
 // basic test
