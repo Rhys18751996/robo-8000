@@ -186,7 +186,7 @@ controller input → mapping → Intent
 **Goal:** Prove motor control in isolation (no robot yet)
 
 ### Tasks:
-- Select motor driver (MX1616H, ~~L298N~~, etc.)
+- Select motor driver (DRV8833, ~~MX1616H,~~ ~~L298N~~, etc.)
 - Wire:
   - ESP32 → driver
   - Driver → 1–2 motors
