@@ -19,6 +19,10 @@ void setup() {
 }
 
 void loop() {
+    beginLoopProfile();
+
     updateLoop();
     updateSerialCommands();
+
+    endLoopProfile();
 }
