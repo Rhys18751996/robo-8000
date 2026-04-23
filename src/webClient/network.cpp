@@ -10,6 +10,7 @@
 namespace {
     QueueHandle_t queue;
     const int QUEUE_SIZE = 5;
+    const int SEND_INTERVAL_MS = 2000;
     
     void networkTask(void* param) {
         unsigned long lastSend = 0;
