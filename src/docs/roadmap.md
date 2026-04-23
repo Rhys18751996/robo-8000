@@ -198,7 +198,7 @@ controller input → mapping → Intent
   - Minimum PWM to move motor (deadband)
   - Direction correctness
 
-### DRV8833:
+### DRV8833 hardware:
 - The DRV8833 has 2 inputs per motor:
   - AIN1, AIN2 → Motor A
   - BIN1, BIN2 → Motor B
