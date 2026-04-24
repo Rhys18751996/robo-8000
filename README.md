@@ -23,7 +23,7 @@ esp32 / bluepad32 / arduino project
 Type: DC micro gearmotor (metal gearbox)
 Voltage options: 6V
 Speed: ~500 RPM
-
+Form factor: N20
 ---
 
 ## motor driver
