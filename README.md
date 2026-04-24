@@ -18,3 +18,14 @@ esp32 / bluepad32 / arduino project
 
 ---
 
+## motor
+
+Type: DC micro gearmotor (metal gearbox)
+Voltage options: 6V
+Speed: ~500 RPM
+
+---
+
+## motor driver
+
+DRV8833, ~~MX1616H,~~
