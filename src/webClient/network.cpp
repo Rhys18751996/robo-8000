@@ -15,29 +15,31 @@ namespace {
     void networkTask(void* param) {
         unsigned long lastSend = 0;
 
-        for (;;) {
-            String payload;
+        const AppConfig cfg = loadPreferencesConfig();
 
-            // Non-blocking check for latest payload
+        for (;;) {
+            char* payload = nullptr;
+
             if (xQueueReceive(queue, &payload, 0) == pdTRUE) {
                 unsigned long now = millis();
 
                 if (now - lastSend >= SEND_INTERVAL_MS) {
                     lastSend = now;
 
-                    AppConfig cfg = loadPreferencesConfig();
-                    if (cfg.apiEndpoint.length() == 0) continue;
+                    if (cfg.apiEndpoint.length() > 0) {
+                        HTTPClient http;
+                        http.begin(cfg.apiEndpoint);
+                        http.addHeader("Content-Type", "application/json");
 
-                    HTTPClient http;
-                    http.begin(cfg.apiEndpoint);
-                    http.addHeader("Content-Type", "application/json");
-
-                    http.POST(payload); // fire-and-forget (ignore result)
-                    http.end();
+                        http.POST((uint8_t*)payload, strlen(payload));
+                        http.end();
+                    }
                 }
+
+                free(payload);
             }
 
-            vTaskDelay(pdMS_TO_TICKS(10)); // small yield
+            vTaskDelay(pdMS_TO_TICKS(10));
         }
     }
 }
@@ -61,6 +63,23 @@ void initWebClient() {
 void queueTelemetrySend(const String& payload) {
     if (!queue) return;
 
-    // overwrite oldest if full (don’t block)
-    xQueueOverwrite(queue, &payload);
+    char* copy = strdup(payload.c_str());  // allocate heap copy
+    if (!copy) {
+        log(ERROR, "Failed to allocate payload");
+        return;
+    }
+
+    // Try to send without blocking
+    if (xQueueSend(queue, &copy, 0) != pdTRUE) {
+        // Queue full → drop oldest and retry
+        char* dropped;
+        if (xQueueReceive(queue, &dropped, 0) == pdTRUE) {
+            free(dropped);  // prevent leak
+        }
+
+        if (xQueueSend(queue, &copy, 0) != pdTRUE) {
+            log(WARN, "Queue still full, dropping payload");
+            free(copy);
+        }
+    }
 }

@@ -15,7 +15,6 @@ static ControllerState lastState = ControllerState::Disconnected;
 
 const int SEND_INTERVAL_MS = 2000;
 static unsigned long lastSend = 0;
-unsigned long now = millis();
 
 namespace {
 // Edge detection + output state memory for GPIO actions.
@@ -181,7 +180,7 @@ void update() {
     readInputs();
     mapToIntent();
     applySafety();
-
+    
     static int debugCounter = 0;
     debugCounter++;
 
@@ -191,25 +190,26 @@ void update() {
     }
 
     // API telemetry - build your payload (example)
-    if (now - lastSend >= 2000) {
-        lastSend = now;
-        char payload[256];
-        snprintf(payload, sizeof(payload),
-            "{\"lx\":%.2f,\"ly\":%.2f,\"rx\":%.2f,\"ry\":%.2f,"
-            "\"lt\":%.2f,\"rt\":%.2f,\"bat\":%d,"
-            "\"A\":%d,\"B\":%d,\"X\":%d,\"Y\":%d,"
-            "\"linear\":%.2f,\"angular\":%.2f,\"connected\":%s}",
-            input.leftStickX, input.leftStickY,
-            input.rightStickX, input.rightStickY,
-            input.leftTrigger, input.rightTrigger,
-            input.batteryPercent,
-            input.A, input.B, input.X, input.Y,
-            currentIntent.linear, currentIntent.angular,
-            input.connected ? "true" : "false"
-        );
+    // if (millis() - lastSend >= SEND_INTERVAL_MS) {
+    //     logf(INFO, "API telemetry POST");
+    //     lastSend = millis();
+    //     char payload[256];
+    //     snprintf(payload, sizeof(payload),
+    //         "{\"lx\":%.2f,\"ly\":%.2f,\"rx\":%.2f,\"ry\":%.2f,"
+    //         "\"lt\":%.2f,\"rt\":%.2f,\"bat\":%d,"
+    //         "\"A\":%d,\"B\":%d,\"X\":%d,\"Y\":%d,"
+    //         "\"linear\":%.2f,\"angular\":%.2f,\"connected\":%s}",
+    //         input.leftStickX, input.leftStickY,
+    //         input.rightStickX, input.rightStickY,
+    //         input.leftTrigger, input.rightTrigger,
+    //         input.batteryPercent,
+    //         input.A, input.B, input.X, input.Y,
+    //         currentIntent.linear, currentIntent.angular,
+    //         input.connected ? "true" : "false"
+    //     );
 
-        queueTelemetrySend(String(payload));
-    }
+    //     queueTelemetrySend(String(payload));
+    // }
 
     outputControl();
 }
