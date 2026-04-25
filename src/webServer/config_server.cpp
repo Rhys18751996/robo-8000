@@ -14,7 +14,7 @@ namespace {
 // Once your phone connects to the ESP32 AP (RobotConfig), use:
 // http://192.168.4.1/ → config page (GET /) 
 // http://192.168.4.1/save → save config (POST /save)
-constexpr const char* kApSsid = "RobotConfig";
+constexpr const char* kApSsid = "Robo8000Config";
 
 WebServer server(80);
 bool serverRunning = false;
@@ -93,7 +93,7 @@ void registerRoutes() {
 void startConfigServer() {
     if (serverRunning) return;
 
-    WiFi.mode(WIFI_AP_STA);
+    WiFi.mode(WIFI_AP); //WiFi.mode(WIFI_AP_STA);
     if (WiFi.softAP(kApSsid)) {
         IPAddress ip = WiFi.softAPIP();
         logf(INFO, "Config AP started: SSID=%s IP=%s", kApSsid, ip.toString().c_str());

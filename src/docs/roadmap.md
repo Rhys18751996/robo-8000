@@ -181,6 +181,31 @@ controller input → mapping → Intent
 
 ---
 
+## issue - when toggling back to "mode RUN" the esp32 gets runtime excpetion and reboots
+EXCVADDR: 0x00000000  LBEG    : 0x40092b8d  LEND    : 0x40092b9d  LCOUNT  : 0xffffffff  
+
+Backtrace: 0x400914d6:0x3ffe2410 0x401aec67:0x3ffe2440 0x401a7b6e:0x3ffe2460 0x401a7cc3:0x3ffe2770 0x401a4d90:0x3ffe2890 0x401a7d29:0x3ffe2ba0 0x401bc419:0x3ffe2bd0 0x4010d346:0x3ffe2c00 0x4010d3e3:0x3ffe2c30 0x400f4331:0x3ffe2cb0 0x400f43bf:0x3ffe2cf0 0x401bb2eb:0x3ffe2d10 0x401bb368:0x3ffe2d60
+
+ELF file SHA256: 3afbb9d5abe17412
+
+Rebooting...
+ets Jun  8 2016 00:22:57
+
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:1
+load:0x3fff0030,len:1344
+load:0x40078000,len:13964
+load:0x40080400,len:3600
+entry 0x400805f0
+Bluepad32 (C) 2016-2024 Ricardo Quesada and contributors.
+Version: v4.1.0
+BTstack: Copyright (C) 2017 BlueKitchen GmbH.
+BTstack up and running at 30:AE:A4:FF:16:12
+[INFO] System starting
+
+---
 ## ✅ Phase 7 – Motor Driver & Bench Control
 
 **Goal:** Prove motor control in isolation (no robot yet)

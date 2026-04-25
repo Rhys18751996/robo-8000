@@ -20,10 +20,10 @@ void setup() {
 }
 
 void loop() {
-    beginLoopProfile();
+    //beginLoopProfile();
 
     updateLoop();
     updateSerialCommands();
 
-    endLoopProfile();
+    //endLoopProfile();
 }

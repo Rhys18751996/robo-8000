@@ -20,7 +20,7 @@ constexpr const char* kKeyMappingJson = "mapping_json";
 The intent is to eventually use the same field as “open this device’s web UI,” defaulting to http://192.168.4.1/ which is more intuitive. 
 but forr ight now it’s just api/intent for the future API-post path.
 */
-constexpr const char* kDefaultApiEndpoint = "http://192.168.4.1/api/intent";
+constexpr const char* kDefaultApiEndpoint = "https://www.rhyshorner.com/robo8000/saveInputData";
 
 Preferences prefs;
 bool prefsInitialized = false;
