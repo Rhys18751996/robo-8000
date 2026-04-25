@@ -128,20 +128,41 @@ void initMapping(const char* mappingJson) {
     DeserializationError error = deserializeJson(doc, mappingJson);
 
     if (error) {
-        // Keep built-in defaults if JSON parse fails.
         logf(ERROR, "Mapping JSON parse failed: %s", error.c_str());
         log(WARN, "Using built-in fallback mapping values");
         return;
     }
 
-    // Use parsed value when present, otherwise keep existing default.
-    config.linearAxis = doc["axes"]["linear"] | config.linearAxis;
-    config.angularAxis = doc["axes"]["angular"] | config.angularAxis;
-    config.boostButton = doc["buttons"]["boost"] | config.boostButton;
-    config.stopButton = doc["buttons"]["stop"] | config.stopButton;
-    config.pulseButton = doc["actions"]["pulse"] | config.pulseButton;
-    config.toggleButton = doc["actions"]["toggle"] | config.toggleButton;
-    config.holdButton = doc["actions"]["hold"] | config.holdButton;
+    // ---- STRINGS (FIXED) ----
+    strlcpy(config.linearAxis,
+            doc["axes"]["linear"] | config.linearAxis,
+            sizeof(config.linearAxis));
+
+    strlcpy(config.angularAxis,
+            doc["axes"]["angular"] | config.angularAxis,
+            sizeof(config.angularAxis));
+
+    strlcpy(config.boostButton,
+            doc["buttons"]["boost"] | config.boostButton,
+            sizeof(config.boostButton));
+
+    strlcpy(config.stopButton,
+            doc["buttons"]["stop"] | config.stopButton,
+            sizeof(config.stopButton));
+
+    strlcpy(config.pulseButton,
+            doc["actions"]["pulse"] | config.pulseButton,
+            sizeof(config.pulseButton));
+
+    strlcpy(config.toggleButton,
+            doc["actions"]["toggle"] | config.toggleButton,
+            sizeof(config.toggleButton));
+
+    strlcpy(config.holdButton,
+            doc["actions"]["hold"] | config.holdButton,
+            sizeof(config.holdButton));
+
+    // ---- NUMBERS (unchanged, these are fine) ----
     config.pulsePin = doc["outputs"]["pulsePin"] | config.pulsePin;
     config.togglePin = doc["outputs"]["togglePin"] | config.togglePin;
     config.holdPin = doc["outputs"]["holdPin"] | config.holdPin;

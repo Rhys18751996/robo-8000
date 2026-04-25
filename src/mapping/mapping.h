@@ -12,17 +12,17 @@
 // You can change button/axis names and output pins without changing control loop code.
 struct MappingConfig {
     // Axis mapping used for driving intent.
-    const char* linearAxis;
-    const char* angularAxis;
+    char linearAxis[16];
+    char angularAxis[16];
 
     // Basic behavior buttons.
-    const char* boostButton;
-    const char* stopButton;
+    char boostButton[16];
+    char stopButton[16];
 
     // GPIO action buttons.
-    const char* pulseButton;
-    const char* toggleButton;
-    const char* holdButton;
+    char pulseButton[16];
+    char toggleButton[16];
+    char holdButton[16];
 
     // GPIO pins used by pulse/toggle/hold actions.
     uint8_t pulsePin;
