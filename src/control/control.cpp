@@ -8,6 +8,7 @@
 #include "../config/preferences_storage.h"
 #include "../utils/log.h"
 #include "../webClient/network.h"
+#include "../motor/motor.h"
 
 RawInput input;
 Intent currentIntent;
@@ -174,6 +175,13 @@ void outputControl() {
     // Store current states for next-loop edge detection.
     lastPulseAction = currentIntent.pulseAction;
     lastToggleAction = currentIntent.toggleAction;
+
+    // Drive motors from intent
+    if (currentIntent.stop) {
+        stopMotors();
+    } else {
+        setArcade(currentIntent.linear, currentIntent.angular);
+    }
 }
 
 void update() {

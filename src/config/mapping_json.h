@@ -18,7 +18,7 @@ constexpr const char* kDefaultMappingJson = R"json(
     "hold": "A"
   },
   "outputs": {
-    "pulsePin": 2,
+    "pulsePin": 25,
     "togglePin": 4,
     "holdPin": 5,
     "pulseDurationMs": 120

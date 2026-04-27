@@ -38,6 +38,10 @@ void setLedForMode(Mode mode) {
 
 void startRunServices() {
     stopConfigServer();
+    delay(500);
+
+    WiFi.disconnect(true, true);
+    delay(500);
 
     if (!inputInitialized) {
         initInput();
@@ -45,6 +49,7 @@ void startRunServices() {
     }
 
     const AppConfig cfg = loadPreferencesConfig();
+
     WiFi.mode(WIFI_STA);
     if (!cfg.wifiSsid.isEmpty()) {
         WiFi.begin(cfg.wifiSsid.c_str(), cfg.wifiPassword.c_str());
@@ -58,6 +63,8 @@ void startRunServices() {
 
 void startConfigServices() {
     WiFi.disconnect(true, true);
+    delay(500);
+
     startConfigServer();
     log(INFO, "CONFIG mode: Bluetooth input disabled");
 }
