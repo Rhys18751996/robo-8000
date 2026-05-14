@@ -2,31 +2,24 @@
 #include "motor.h"
 #include <Arduino.h>
 
-// ---- CONFIG (change later for DRV8833) ----
+#include "../config/hardware_pins.h"
+
+// ---- CONFIG ----
 namespace {
-    // LEFT motor
-    const int L_IN1 = 18;
-    const int L_IN2 = 19;
-
-    // RIGHT motor
-    const int R_IN1 = 21;
-    const int R_IN2 = 22;
-
-    const int PWM_FREQ = 20000;
-    const int PWM_RES = 8; // 0-255
+using namespace HardwarePins;
 }
 
 // ---- INIT ----
 void initMotors() {
-    pinMode(L_IN1, OUTPUT);
-    pinMode(L_IN2, OUTPUT);
-    pinMode(R_IN1, OUTPUT);
-    pinMode(R_IN2, OUTPUT);
+    pinMode(kLeftIn1, OUTPUT);
+    pinMode(kLeftIn2, OUTPUT);
+    pinMode(kRightIn1, OUTPUT);
+    pinMode(kRightIn2, OUTPUT);
 
-    ledcAttach(L_IN1, PWM_FREQ, PWM_RES);
-    ledcAttach(L_IN2, PWM_FREQ, PWM_RES);
-    ledcAttach(R_IN1, PWM_FREQ, PWM_RES);
-    ledcAttach(R_IN2, PWM_FREQ, PWM_RES);
+    ledcAttach(kLeftIn1, kMotorPwmFreq, kMotorPwmResolutionBits);
+    ledcAttach(kLeftIn2, kMotorPwmFreq, kMotorPwmResolutionBits);
+    ledcAttach(kRightIn1, kMotorPwmFreq, kMotorPwmResolutionBits);
+    ledcAttach(kRightIn2, kMotorPwmFreq, kMotorPwmResolutionBits);
 }
 
 // ---- CORE ----
@@ -47,9 +40,9 @@ static void drive(int pin1, int pin2, int speed) {
 
 void setMotor(MotorSide side, int speed) {
     if (side == LEFT) {
-        drive(L_IN1, L_IN2, speed);
+        drive(kLeftIn1, kLeftIn2, speed);
     } else {
-        drive(R_IN1, R_IN2, speed);
+        drive(kRightIn1, kRightIn2, speed);
     }
 }
 
@@ -61,10 +54,10 @@ void stopMotors() {
 
 void brakeMotors() {
     // both HIGH = brake for most H-bridges
-    ledcWrite(L_IN1, 255);
-    ledcWrite(L_IN2, 255);
-    ledcWrite(R_IN1, 255);
-    ledcWrite(R_IN2, 255);
+    ledcWrite(kLeftIn1, 255);
+    ledcWrite(kLeftIn2, 255);
+    ledcWrite(kRightIn1, 255);
+    ledcWrite(kRightIn2, 255);
 }
 
 void setTank(int left, int right) {
